@@ -1,5 +1,3 @@
-const input = { hp: 100, damage: 8, armor: 2 };
-
 const weapons = [
   { cost: 8, damage: 4, armor: 0 },
   { cost: 10, damage: 5, armor: 0 },
@@ -29,22 +27,14 @@ const rings = [
 
 const itemMatrix = [weapons, armor, rings, rings];
 
-function generateItemPermutations(
-  generatedPermutation,
-  currentPermutation,
-  itemsToPermutate
-) {
+function generateItemPermutations(generatedPermutation, currentPermutation, itemsToPermutate) {
   if (itemsToPermutate.length == 0) {
     generatedPermutation.push(currentPermutation);
   } else {
     for (let item of itemsToPermutate[0]) {
       let nextPermutation = [...currentPermutation, item];
       let remainingItems = itemsToPermutate.slice(1);
-      generateItemPermutations(
-        generatedPermutation,
-        nextPermutation,
-        remainingItems
-      );
+      generateItemPermutations(generatedPermutation, nextPermutation, remainingItems);
     }
   }
 }
@@ -72,22 +62,23 @@ function generateCharacters(items) {
 
 function getWinner(player, enemy) {
   while (true) {
-    enemy.hp -=
-      player.damage - enemy.armor > 0 ? player.damage - enemy.armor : 1;
+    enemy.hp -= player.damage - enemy.armor > 0 ? player.damage - enemy.armor : 1;
     if (enemy.hp <= 0) return player;
-    player.hp -=
-      enemy.damage - player.armor > 0 ? enemy.damage - player.armor : 1;
+    player.hp -= enemy.damage - player.armor > 0 ? enemy.damage - player.armor : 1;
     if (player.hp <= 0) return enemy;
   }
 }
 
-let characters = generateCharacters(itemMatrix);
-let minCost = Infinity;
-for (let character of characters) {
-  let enemy = Object.assign({}, input);
-  if (getWinner(character, enemy) == character) {
-    minCost = character.cost < minCost ? character.cost : minCost;
-  }
-}
+module.exports.getSolution = () => {
+  const input = { hp: 100, damage: 8, armor: 2 };
 
-console.log(minCost);
+  let characters = generateCharacters(itemMatrix);
+  let minCost = Infinity;
+  for (let character of characters) {
+    let enemy = Object.assign({}, input);
+    if (getWinner(character, enemy) == character) {
+      minCost = character.cost < minCost ? character.cost : minCost;
+    }
+  }
+  return minCost;
+};

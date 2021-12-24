@@ -1,9 +1,5 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n");
-
 function hasSameLetterTwiceInARow(inputString) {
   let lastChar = "";
   for (char of inputString) {
@@ -30,9 +26,11 @@ function doesNotContainIllegalString(inputString) {
   return true;
 }
 
-let niceStringCount = input
-  .filter(doesNotContainIllegalString)
-  .filter(hasAtLeastThreeVowels)
-  .filter(hasSameLetterTwiceInARow).length;
+module.exports.getSolution = () => {
+  const input = fs.readFileSync(__dirname + "/input.txt", { encoding: "utf8" }).split("\n");
 
-console.log(niceStringCount);
+  return input
+    .filter(doesNotContainIllegalString)
+    .filter(hasAtLeastThreeVowels)
+    .filter(hasSameLetterTwiceInARow).length;
+};

@@ -1,21 +1,8 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n")
-  .filter((x) => x.length > 0)
-  .map((x) => parseInt(x));
-
-const destinationVolume = 150;
-
 function getContainerCombinations(containers, destinationValue) {
   let generatedPermutations = [];
-  getContainerCombinationsRecursive(
-    generatedPermutations,
-    [],
-    containers,
-    destinationValue
-  );
+  getContainerCombinationsRecursive(generatedPermutations, [], containers, destinationValue);
   return generatedPermutations;
 }
 
@@ -45,4 +32,13 @@ function getContainerCombinationsRecursive(
   }
 }
 
-console.log(getContainerCombinations(input, destinationVolume).length);
+module.exports.getSolution = () => {
+  const input = fs
+    .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
+    .split("\n")
+    .filter((x) => x.length > 0)
+    .map((x) => parseInt(x));
+
+  const destinationVolume = 150;
+  return getContainerCombinations(input, destinationVolume).length;
+};

@@ -1,10 +1,5 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n")
-  .filter((x) => x.length > 0);
-
 const arrangementRegex = /^(\w+)\swould\s(\w+)\s(\d+)\shappiness\sunits\sby\ssitting\snext\sto\s(\w+)./;
 
 function getPersonIdx(peopleArray, person) {
@@ -55,14 +50,8 @@ function generatePermutationsRecursive(
   if (elementsToPermute.length > 0) {
     for (let elementToPermute of elementsToPermute) {
       let nextPermutation = [...currentPermutation, elementToPermute];
-      let remainingElements = elementsToPermute.filter(
-        (x) => x != elementToPermute
-      );
-      generatePermutationsRecursive(
-        generatedPermutations,
-        nextPermutation,
-        remainingElements
-      );
+      let remainingElements = elementsToPermute.filter((x) => x != elementToPermute);
+      generatePermutationsRecursive(generatedPermutations, nextPermutation, remainingElements);
     }
   } else {
     generatedPermutations.push(currentPermutation);
@@ -71,11 +60,7 @@ function generatePermutationsRecursive(
 
 function generatePermutations(peopleArray) {
   let generatedPermutations = [];
-  generatePermutationsRecursive(
-    generatedPermutations,
-    [],
-    Array.from(peopleArray.keys())
-  );
+  generatePermutationsRecursive(generatedPermutations, [], Array.from(peopleArray.keys()));
   return generatedPermutations;
 }
 
@@ -84,25 +69,25 @@ function calculateHappieness(seatPermutation, happienessMatrix) {
   for (let i = 0; i < seatPermutation.length - 1; i++) {
     happieness += happienessMatrix[seatPermutation[i]][seatPermutation[i + 1]];
   }
-  happieness +=
-    happienessMatrix[seatPermutation[0]][
-      seatPermutation[seatPermutation.length - 1]
-    ];
+  happieness += happienessMatrix[seatPermutation[0]][seatPermutation[seatPermutation.length - 1]];
 
   return happieness;
 }
 
-let parsedInput = parseInput(input);
-let seatPermutations = generatePermutations(parsedInput.people);
+module.exports.getSolution = () => {
+  const input = fs
+    .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
+    .split("\n")
+    .filter((x) => x.length > 0);
 
-let maxHappieness = 0;
-for (let permutation of seatPermutations) {
-  const currHappieness = calculateHappieness(
-    permutation,
-    parsedInput.happienessMatrix
-  );
-  maxHappieness =
-    currHappieness > maxHappieness ? currHappieness : maxHappieness;
-}
+  let parsedInput = parseInput(input);
+  let seatPermutations = generatePermutations(parsedInput.people);
 
-console.log(maxHappieness);
+  let maxHappieness = 0;
+  for (let permutation of seatPermutations) {
+    const currHappieness = calculateHappieness(permutation, parsedInput.happienessMatrix);
+    maxHappieness = currHappieness > maxHappieness ? currHappieness : maxHappieness;
+  }
+
+  return maxHappieness;
+};

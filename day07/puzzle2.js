@@ -1,19 +1,8 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n");
-
-const instructionMap = new Map();
-const instructionCache = new Map();
 const bitmask16 = 0b00000000000000001111111111111111;
 
-input.forEach((instruction) => {
-  const instructionSplit = instruction.split(" -> ");
-  instructionMap.set(instructionSplit[1], instructionSplit[0]);
-});
-
-function getWireInput(identifier) {
+function getWireInput(identifier, instructionMap, instructionCache) {
   // if instruction is a number, return it
   if (!isNaN(identifier)) {
     return parseInt(identifier);
@@ -31,17 +20,17 @@ function getWireInput(identifier) {
   let result;
   // instructions consisting of one word are always direct assignments
   if (inputRuleParts.length == 1) {
-    result = getWireInput(inputRuleParts[0]);
+    result = getWireInput(inputRuleParts[0], instructionMap, instructionCache);
 
     // instructions consisting of two word should always be negotiations
   } else if (inputRuleParts.length == 2 && inputRuleParts[0] == "NOT") {
     // AND with 16 bit mask, as otherwise NOT would not be correct
-    result = ~getWireInput(inputRuleParts[1]) & bitmask16;
+    result = ~getWireInput(inputRuleParts[1], instructionMap, instructionCache) & bitmask16;
 
     // instructions consisting of three words are AND, OR, LSHIFT, RSHIFT
   } else if (inputRuleParts.length == 3) {
-    const a = getWireInput(inputRuleParts[0]);
-    const b = getWireInput(inputRuleParts[2]);
+    const a = getWireInput(inputRuleParts[0], instructionMap, instructionCache);
+    const b = getWireInput(inputRuleParts[2], instructionMap, instructionCache);
     switch (inputRuleParts[1]) {
       case "AND":
         result = a & b & bitmask16;
@@ -64,9 +53,19 @@ function getWireInput(identifier) {
   return result;
 }
 
-const firstRunResult = getWireInput("a");
-instructionCache.clear();
-instructionCache.set("b", firstRunResult);
-const secondRunResult = getWireInput("a");
+module.exports.getSolution = () => {
+  const input = fs.readFileSync(__dirname + "/input.txt", { encoding: "utf8" }).split("\n");
 
-console.log(secondRunResult);
+  const instructionMap = new Map();
+  const instructionCache = new Map();
+
+  input.forEach((instruction) => {
+    const instructionSplit = instruction.split(" -> ");
+    instructionMap.set(instructionSplit[1], instructionSplit[0]);
+  });
+
+  const firstRunResult = getWireInput("a", instructionMap, instructionCache);
+  instructionCache.clear();
+  instructionCache.set("b", firstRunResult);
+  return getWireInput("a", instructionMap, instructionCache);
+};

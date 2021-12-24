@@ -1,15 +1,9 @@
-const input = "hepxcrrq";
-
 function calcNextValidPassword(password) {
   let nextPw = password;
 
   while (true) {
     nextPw = increaseChar(nextPw, 7);
-    if (
-      hasNoConfusingChar(nextPw) &&
-      hasTwoCharPairs(nextPw) &&
-      hasThreeIncreasingChars(nextPw)
-    ) {
+    if (hasNoConfusingChar(nextPw) && hasTwoCharPairs(nextPw) && hasThreeIncreasingChars(nextPw)) {
       break;
     }
   }
@@ -55,5 +49,8 @@ function hasTwoCharPairs(password) {
   return existingPairChars.size >= 2;
 }
 
-const firstValidPassword = calcNextValidPassword(input);
-console.log(calcNextValidPassword(firstValidPassword));
+module.exports.getSolution = () => {
+  const input = "hepxcrrq";
+  const firstValidPassword = calcNextValidPassword(input);
+  return calcNextValidPassword(firstValidPassword);
+};

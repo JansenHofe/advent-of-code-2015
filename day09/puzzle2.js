@@ -1,10 +1,5 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n")
-  .filter((x) => x.length > 0);
-
 const inputRegex = /^(\w+)\sto\s(\w+)\s=\s(\d+)/;
 
 function getNameIndex(name, nameList) {
@@ -30,22 +25,14 @@ function createDistanceMatrix(input) {
   return distMatrix;
 }
 
-function generatePermutations(
-  generatedPermutation,
-  currentPermutation,
-  itemsToPermutate
-) {
+function generatePermutations(generatedPermutation, currentPermutation, itemsToPermutate) {
   if (itemsToPermutate.length == 0) {
     generatedPermutation.push(currentPermutation);
   } else {
     for (let item of itemsToPermutate) {
       let nextPermutation = [...currentPermutation, item];
       let remainingItems = itemsToPermutate.filter((x) => x !== item);
-      generatePermutations(
-        generatedPermutation,
-        nextPermutation,
-        remainingItems
-      );
+      generatePermutations(generatedPermutation, nextPermutation, remainingItems);
     }
   }
 }
@@ -58,15 +45,22 @@ function calculatePathDistance(distanceMatrix, path) {
   return distance;
 }
 
-const distanceMatrix = createDistanceMatrix(input);
-let locationIndices = Array.from(distanceMatrix.keys());
+module.exports.getSolution = () => {
+  const input = fs
+    .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
+    .split("\n")
+    .filter((x) => x.length > 0);
 
-let permutations = [];
-generatePermutations(permutations, [], locationIndices);
+  const distanceMatrix = createDistanceMatrix(input);
+  let locationIndices = Array.from(distanceMatrix.keys());
 
-let maxDistance = permutations.reduce((max, curr) => {
-  const currDist = calculatePathDistance(distanceMatrix, curr);
-  return currDist > max ? currDist : max;
-}, 0);
+  let permutations = [];
+  generatePermutations(permutations, [], locationIndices);
 
-console.log(maxDistance);
+  let maxDistance = permutations.reduce((max, curr) => {
+    const currDist = calculatePathDistance(distanceMatrix, curr);
+    return currDist > max ? currDist : max;
+  }, 0);
+
+  return maxDistance;
+};

@@ -1,41 +1,9 @@
 const spells = [
-  {
-    cost: 53,
-    damage: 4,
-    heal: 0,
-    armor: 0,
-    poison: 0,
-    mana: 0,
-    name: "magic missle",
-  },
+  { cost: 53, damage: 4, heal: 0, armor: 0, poison: 0, mana: 0, name: "magic missle" },
   { cost: 73, damage: 2, heal: 2, armor: 0, poison: 0, mana: 0, name: "drain" },
-  {
-    cost: 113,
-    damage: 0,
-    heal: 0,
-    armor: 6,
-    poison: 0,
-    mana: 0,
-    name: "shield",
-  },
-  {
-    cost: 173,
-    damage: 0,
-    heal: 0,
-    armor: 0,
-    poison: 6,
-    mana: 0,
-    name: "poison",
-  },
-  {
-    cost: 229,
-    damage: 0,
-    heal: 0,
-    armor: 0,
-    poison: 0,
-    mana: 5,
-    name: "recharge",
-  },
+  { cost: 113, damage: 0, heal: 0, armor: 6, poison: 0, mana: 0, name: "shield" },
+  { cost: 173, damage: 0, heal: 0, armor: 0, poison: 6, mana: 0, name: "poison" },
+  { cost: 229, damage: 0, heal: 0, armor: 0, poison: 0, mana: 5, name: "recharge" },
 ];
 
 function handleEffectTimers(player, enemy, effectTimers) {
@@ -82,14 +50,7 @@ function playerTurn(player, enemy, spell, effectTimers) {
   return 0;
 }
 
-function nextRound(
-  player,
-  enemy,
-  effectTimers,
-  spells,
-  spentManaTotal,
-  spentManaAmounts
-) {
+function nextRound(player, enemy, effectTimers, spells, spentManaTotal, spentManaAmounts) {
   for (const spell of spells) {
     // clone objects for each permutation
     let playerNext = Object.assign({}, player);
@@ -130,9 +91,7 @@ function nextRound(
 
     // handle enemy attack
     playerNext.hp -=
-      enemyNext.damage - playerNext.armor > 0
-        ? enemyNext.damage - playerNext.armor
-        : 1;
+      enemyNext.damage - playerNext.armor > 0 ? enemyNext.damage - playerNext.armor : 1;
 
     if (playerNext.hp <= 0) {
       continue;
@@ -149,11 +108,13 @@ function nextRound(
   }
 }
 
-let player = { hp: 50, mana: 500 };
-let enemy = { hp: 71, damage: 10 };
-let effectTimers = { armor: 0, poison: 0, mana: 0 };
+module.exports.getSolution = () => {
+  let player = { hp: 50, mana: 500 };
+  let enemy = { hp: 71, damage: 10 };
+  let effectTimers = { armor: 0, poison: 0, mana: 0 };
 
-let spentManaAmounts = [];
-nextRound(player, enemy, effectTimers, spells, 0, spentManaAmounts);
+  let spentManaAmounts = [];
+  nextRound(player, enemy, effectTimers, spells, 0, spentManaAmounts);
 
-console.log(spentManaAmounts.reduce((min, curr) => (curr < min ? curr : min)));
+  return spentManaAmounts.reduce((min, curr) => (curr < min ? curr : min));
+};

@@ -1,7 +1,5 @@
 const fs = require("fs");
 
-const input = fs.readFileSync(__dirname + "/input.txt", { encoding: "utf8" });
-
 function parseProgram(input) {
   return input
     .split("\n")
@@ -35,12 +33,15 @@ let instructionHandlers = {
   },
 };
 
-let registers = { a: 1, b: 0, pc: 0 };
-const program = parseProgram(input);
-while (true) {
-  const instr = program[registers.pc];
-  if (instr == undefined) break;
-  instructionHandlers[instr.op](registers, ...instr.args);
-}
+module.exports.getSolution = () => {
+  const input = fs.readFileSync(__dirname + "/input.txt", { encoding: "utf8" });
 
-console.log(registers.b);
+  let registers = { a: 1, b: 0, pc: 0 };
+  const program = parseProgram(input);
+  while (true) {
+    const instr = program[registers.pc];
+    if (instr == undefined) break;
+    instructionHandlers[instr.op](registers, ...instr.args);
+  }
+  return registers.b;
+};

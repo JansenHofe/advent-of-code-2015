@@ -1,9 +1,5 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n");
-
 function hasTwoNonOverlappingLetterPairs(inputString) {
   for (let i = 0; i < inputString.length - 2; i++) {
     if (inputString.indexOf(inputString.substr(i, 2), i + 2) != -1) {
@@ -22,8 +18,10 @@ function hasRepeatingLetterWithOneLetterBetween(inputString) {
   return false;
 }
 
-let niceStringCount = input
-  .filter(hasTwoNonOverlappingLetterPairs)
-  .filter(hasRepeatingLetterWithOneLetterBetween).length;
+module.exports.getSolution = () => {
+  const input = fs.readFileSync(__dirname + "/input.txt", { encoding: "utf8" }).split("\n");
 
-console.log(niceStringCount);
+  return input
+    .filter(hasTwoNonOverlappingLetterPairs)
+    .filter(hasRepeatingLetterWithOneLetterBetween).length;
+};

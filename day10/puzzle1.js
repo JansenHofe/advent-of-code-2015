@@ -15,9 +15,10 @@ function getNextSequence(seq) {
   return nextSeq;
 }
 
-let sequence = "3113322113";
-for (let i = 0; i < 40; i++) {
-  sequence = getNextSequence(sequence);
-}
-
-console.log(sequence.length);
+module.exports.getSolution = () => {
+  let sequence = "3113322113";
+  for (let i = 0; i < 40; i++) {
+    sequence = getNextSequence(sequence);
+  }
+  return sequence.length;
+};

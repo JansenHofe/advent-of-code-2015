@@ -1,21 +1,8 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n")
-  .filter((x) => x.length > 0)
-  .map((x) => parseInt(x));
-
-const destinationVolume = 150;
-
 function getContainerCombinations(containers, destinationValue) {
   let generatedPermutations = [];
-  getContainerCombinationsRecursive(
-    generatedPermutations,
-    [],
-    containers,
-    destinationValue
-  );
+  getContainerCombinationsRecursive(generatedPermutations, [], containers, destinationValue);
   return generatedPermutations;
 }
 
@@ -45,13 +32,21 @@ function getContainerCombinationsRecursive(
   }
 }
 
-const combis = getContainerCombinations(input, destinationVolume);
-let minContainerCount = combis.reduce(
-  (min, curr) => (curr.length < min ? curr.length : min),
-  Infinity
-);
-let combisWithMinContainterCount = combis.filter(
-  (x) => x.length == minContainerCount
-);
+module.exports.getSolution = () => {
+  const input = fs
+    .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
+    .split("\n")
+    .filter((x) => x.length > 0)
+    .map((x) => parseInt(x));
 
-console.log(combisWithMinContainterCount.length);
+  const destinationVolume = 150;
+
+  const combis = getContainerCombinations(input, destinationVolume);
+  let minContainerCount = combis.reduce(
+    (min, curr) => (curr.length < min ? curr.length : min),
+    Infinity
+  );
+  let combisWithMinContainterCount = combis.filter((x) => x.length == minContainerCount);
+
+  return combisWithMinContainterCount.length;
+};

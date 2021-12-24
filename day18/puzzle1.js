@@ -1,13 +1,5 @@
 const fs = require("fs");
 
-const input = fs
-  .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
-  .split("\n")
-  .filter((x) => x.length > 0)
-  .map((x) => x.split(""));
-
-const steps = 100;
-
 function isPositionInMatrix(matrix, y, x) {
   return !(matrix[y] == undefined || matrix[y][x] == undefined);
 }
@@ -56,15 +48,24 @@ function calcNextMatrix(matrix) {
   return nextMatrix;
 }
 
-let currMatrix = input;
-for (let i = 0; i < steps; i++) {
-  currMatrix = calcNextMatrix(currMatrix);
-}
+module.exports.getSolution = () => {
+  const input = fs
+    .readFileSync(__dirname + "/input.txt", { encoding: "utf8" })
+    .split("\n")
+    .filter((x) => x.length > 0)
+    .map((x) => x.split(""));
 
-const lightCount = currMatrix.reduce(
-  (sum, currRow) =>
-    sum + currRow.reduce((sum, currCell) => sum + (currCell == "#" ? 1 : 0), 0),
-  0
-);
+  const steps = 100;
 
-console.log(lightCount);
+  let currMatrix = input;
+  for (let i = 0; i < steps; i++) {
+    currMatrix = calcNextMatrix(currMatrix);
+  }
+
+  const lightCount = currMatrix.reduce(
+    (sum, currRow) => sum + currRow.reduce((sum, currCell) => sum + (currCell == "#" ? 1 : 0), 0),
+    0
+  );
+
+  return lightCount;
+};
