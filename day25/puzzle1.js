@@ -8,7 +8,8 @@ function calcNextCode(input) {
 
 let currentFieldNumber = startNumber;
 let currentLevel = 2;
-while (true) {
+let searchedFieldNumber = -1;
+while (searchedFieldNumber == -1) {
   for (let tableIdx = 0; tableIdx < currentLevel; tableIdx++) {
     let y = currentLevel - tableIdx;
     let x = tableIdx + 1;
@@ -16,9 +17,11 @@ while (true) {
     currentFieldNumber = calcNextCode(currentFieldNumber);
 
     if (y == 3010 && x == 3019) {
-      console.log(y + "," + x + ": " + currentFieldNumber);
+      searchedFieldNumber = currentFieldNumber;
       break;
     }
   }
   currentLevel++;
 }
+
+console.log(searchedFieldNumber);
